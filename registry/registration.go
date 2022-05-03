@@ -5,10 +5,24 @@ type Registration struct {
 	ServiceName ServiceName
 	// 服务地址
 	ServiceURL string
+	// 当前服务依赖其他服务
+	RequiredServices []ServiceName
+	ServiceUpdateURL string
 }
 
 type ServiceName string
 
 const (
-	LogService = ServiceName("LogService")
+	LogService     = ServiceName("LogService")
+	GradingService = ServiceName("GradingService")
 )
+
+type patchEntry struct {
+	Name ServiceName
+	URL  string
+}
+
+type patch struct {
+	Added   []patchEntry
+	Removed []patchEntry
+}

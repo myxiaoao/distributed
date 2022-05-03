@@ -28,7 +28,7 @@ func (fl fileLog) Write(data []byte) (int, error) {
 
 // Run 自定义日志
 func Run(destination string) {
-	log = stLog.New(fileLog(destination), "go: ", stLog.LstdFlags) // 带 go 前缀和日期的日志
+	log = stLog.New(fileLog(destination), "[go] - ", stLog.LstdFlags) // 带 go 前缀和日期的日志
 }
 
 // RegisterHandlers 注册日志服务
