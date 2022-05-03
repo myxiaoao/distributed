@@ -2,38 +2,44 @@ package main
 
 import (
 	"context"
-	"distributed/grades"
 	"distributed/log"
+	"distributed/portal"
 	"distributed/registry"
 	"distributed/service"
 	"fmt"
-	stLog "log"
+	stlog "log"
 )
 
 func main() {
-	host, port := "localhost", "8003"
+	err := portal.ImportTemplates()
+	if err != nil {
+		stlog.Fatal(err)
+	}
+	host, port := "localhost", "8004"
 	serviceAddr := fmt.Sprintf("http://%s:%s", host, port)
+
 	r := registry.Registration{
-		ServiceName:      registry.GradingService,
-		ServiceURL:       serviceAddr,
-		RequiredServices: []registry.ServiceName{registry.LogService},
+		ServiceName: registry.PortalService,
+		ServiceURL:  serviceAddr,
+		RequiredServices: []registry.ServiceName{
+			registry.LogService,
+			registry.GradingService,
+		},
 		ServiceUpdateURL: serviceAddr + "/services",
 	}
-	ctx, err := service.Start(
-		context.Background(),
+
+	ctx, err := service.Start(context.Background(),
 		host,
 		port,
 		r,
-		grades.RegisterHandlers,
-	)
+		portal.RegisterHandlers)
 	if err != nil {
-		stLog.Fatalln(err)
+		stlog.Fatal(err)
 	}
 	if logProvider, err := registry.GetProvider(registry.LogService); err == nil {
 		fmt.Printf("Logging service found at: %v\n", logProvider)
 		log.SetClientLogger(logProvider, r.ServiceName)
 	}
 	<-ctx.Done()
-
-	fmt.Println("Shutting down grading service.")
+	fmt.Println("Shutting down portal.")
 }

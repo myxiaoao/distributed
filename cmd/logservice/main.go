@@ -14,7 +14,7 @@ func main() {
 	// 初始化自定义日志
 	log.Run("./distributed.log")
 	// 初始化主机，地址
-	host, port := "localhost", "4000"
+	host, port := "localhost", "8002"
 	serviceAddr := fmt.Sprintf("http://%s:%s", host, port)
 	r := registry.Registration{
 		ServiceName:      registry.LogService,
