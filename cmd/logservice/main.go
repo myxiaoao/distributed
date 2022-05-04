@@ -21,6 +21,7 @@ func main() {
 		ServiceURL:       serviceAddr,
 		RequiredServices: make([]registry.ServiceName, 0),
 		ServiceUpdateURL: serviceAddr + "/services",
+		HeartbeatURL:     serviceAddr + "/heartbeat",
 	}
 	// 启动服务
 	ctx, err := service.Start(
